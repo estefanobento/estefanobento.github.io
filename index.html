@@ -8,295 +8,715 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     :root {
-      --navy: #0A0F1E;
-      --blue: #2D6EF7;
-      --slate: #8892A4;
-      --offwhite: #F0F4FF;
-      --surface: #111827;
-      --surface2: #1a2236;
-      --border: #1e2d4a;
-      --green: #00D68F;
-      --amber: #F59E0B;
-      --tag-bg: #0d1729;
+      --navy: #04060f;
+      --navy2: #080d1a;
+      --blue: #3b7eff;
+      --blue-glow: rgba(59,126,255,0.18);
+      --blue-dim: rgba(59,126,255,0.08);
+      --slate: #7a86a0;
+      --slate2: #a0aec0;
+      --offwhite: #eef2ff;
+      --surface: #0d1424;
+      --surface2: #111d30;
+      --border: rgba(59,126,255,0.12);
+      --border2: rgba(255,255,255,0.06);
+      --green: #00e5a0;
+      --green-glow: rgba(0,229,160,0.15);
+      --amber: #f5a623;
+      --amber-glow: rgba(245,166,35,0.15);
+      --tag-bg: rgba(59,126,255,0.07);
+      --radius: 12px;
+      --radius-sm: 6px;
     }
+
     html { scroll-behavior: smooth; }
+
     body {
       background: var(--navy);
       font-family: 'Space Grotesk', sans-serif;
       color: var(--offwhite);
       min-height: 100vh;
+      overflow-x: hidden;
     }
+
     a { text-decoration: none; color: inherit; }
 
-    /* HERO */
-    .hero {
-      padding: 4rem 2rem 3rem;
-      border-bottom: 1px solid var(--border);
-      max-width: 900px;
-      margin: 0 auto;
-    }
-    .hero-eyebrow {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      color: var(--blue);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 1.2rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .hero-eyebrow::before {
+    /* ─── MESH BACKGROUND ─── */
+    body::before {
       content: '';
-      width: 24px;
-      height: 1px;
-      background: var(--blue);
-      display: inline-block;
-    }
-    h1 {
-      font-size: clamp(2rem, 5vw, 3.2rem);
-      font-weight: 700;
-      line-height: 1.05;
-      letter-spacing: -0.03em;
-      margin-bottom: 1rem;
-    }
-    h1 span { color: var(--blue); }
-    .hero-sub {
-      font-size: 1rem;
-      color: var(--slate);
-      max-width: 520px;
-      line-height: 1.6;
-      margin-bottom: 2rem;
-    }
-    .stat-bar { display: flex; gap: 2rem; flex-wrap: wrap; }
-    .stat { display: flex; flex-direction: column; gap: 2px; }
-    .stat-num { font-size: 1.6rem; font-weight: 700; color: var(--offwhite); }
-    .stat-label {
-      font-size: 11px;
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--slate);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(59,126,255,0.14) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 40% at 90% 60%, rgba(0,229,160,0.06) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 30% at 10% 80%, rgba(59,126,255,0.07) 0%, transparent 55%);
+      pointer-events: none;
+      z-index: 0;
     }
 
-    /* SECTIONS */
-    .section {
-      padding: 2rem;
-      max-width: 900px;
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(59,126,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59,126,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      background: rgba(4,6,15,0.7);
+      border-bottom: 1px solid var(--border2);
+    }
+
+    .nav-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--blue);
+      letter-spacing: 0.06em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--slate);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--offwhite); }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      padding: 9rem 2rem 5rem;
+      max-width: 960px;
       margin: 0 auto;
     }
-    .section-header {
+
+    .hero-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--blue);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
       display: flex;
       align-items: center;
       gap: 12px;
-      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.1s forwards;
     }
-    .section-label {
+
+    .eyebrow-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--blue);
+      box-shadow: 0 0 10px var(--blue);
+      animation: pulse 2.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%,100% { opacity:1; transform: scale(1); }
+      50% { opacity:0.5; transform: scale(0.8); }
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      margin-bottom: 1.25rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
+
+    .hero-highlight {
+      background: linear-gradient(135deg, #6fa3ff 0%, #3b7eff 40%, #00e5a0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--slate2);
+      max-width: 500px;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.3s forwards;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 3.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.4s forwards;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      transition: box-shadow 0.25s, transform 0.2s;
+      box-shadow: 0 0 0 0 rgba(59,126,255,0);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(59,126,255,0.45);
+    }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      border: 1px solid var(--border);
+      color: var(--slate2);
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: var(--radius-sm);
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+
+    .btn-ghost:hover {
+      border-color: rgba(59,126,255,0.5);
+      color: var(--offwhite);
+      background: var(--blue-dim);
+    }
+
+    /* ─── STAT BAR ─── */
+    .stat-bar {
+      display: flex;
+      gap: 0;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.5s forwards;
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: rgba(8,13,26,0.6);
+      backdrop-filter: blur(12px);
+      width: fit-content;
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding: 1.1rem 1.8rem;
+      border-right: 1px solid var(--border2);
+      position: relative;
+    }
+
+    .stat:last-child { border-right: none; }
+
+    .stat::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--blue), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .stat:hover::before { opacity: 1; }
+
+    .stat-num {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: var(--offwhite);
+      letter-spacing: -0.03em;
+    }
+
+    .stat-label {
+      font-size: 10px;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
       color: var(--slate);
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      white-space: nowrap;
     }
-    .section-line { flex: 1; height: 1px; background: var(--border); }
 
-    /* GRID */
+    /* ─── SCROLL DIVIDER ─── */
+    .divider {
+      position: relative;
+      z-index: 1;
+      max-width: 960px;
+      margin: 0 auto;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+    }
+
+    /* ─── SECTIONS ─── */
+    .section {
+      position: relative;
+      z-index: 1;
+      padding: 3rem 2rem;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 1.75rem;
+    }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      white-space: nowrap;
+      padding: 3px 10px;
+      border: 1px solid rgba(59,126,255,0.25);
+      border-radius: 3px;
+      background: var(--blue-dim);
+    }
+
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--border), transparent);
+    }
+
+    .section-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--slate);
+      letter-spacing: 0.06em;
+    }
+
+    /* ─── CARDS GRID ─── */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1px;
-      background: var(--border);
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 12px;
     }
 
-    /* CARDS */
+    /* ─── CARD ─── */
     .card {
-      background: var(--navy);
+      background: rgba(8,13,26,0.7);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
       padding: 1.5rem;
-      transition: background 0.15s;
+      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      position: relative;
+      overflow: hidden;
     }
-    .card:hover { background: var(--surface); }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--blue), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .card:hover {
+      border-color: rgba(59,126,255,0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(59,126,255,0.08);
+    }
+
+    .card:hover::before { opacity: 1; }
+
     .card-header {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      margin-bottom: 1rem;
+      margin-bottom: 1.1rem;
     }
+
+    .card-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: var(--blue-dim);
+      border: 1px solid rgba(59,126,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    /* ─── STATUS BADGES ─── */
     .status {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      padding: 3px 8px;
-      border-radius: 3px;
-      letter-spacing: 0.06em;
+      font-size: 9.5px;
+      padding: 3px 9px;
+      border-radius: 20px;
+      letter-spacing: 0.08em;
       font-weight: 500;
       white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
+
     .status-live {
-      background: rgba(0, 214, 143, 0.12);
+      background: var(--green-glow);
       color: var(--green);
-      border: 1px solid rgba(0, 214, 143, 0.3);
+      border: 1px solid rgba(0,229,160,0.25);
     }
+
     .status-pilot {
-      background: rgba(245, 158, 11, 0.12);
+      background: var(--amber-glow);
       color: var(--amber);
-      border: 1px solid rgba(245, 158, 11, 0.3);
+      border: 1px solid rgba(245,166,35,0.25);
     }
+
     .status-build {
-      background: rgba(45, 110, 247, 0.12);
-      color: #7aa8ff;
-      border: 1px solid rgba(45, 110, 247, 0.3);
+      background: var(--blue-dim);
+      color: #7aadff;
+      border: 1px solid rgba(59,126,255,0.2);
     }
+
     .live-dot {
-      display: inline-block;
-      width: 6px;
-      height: 6px;
+      width: 5px; height: 5px;
       border-radius: 50%;
-      background: var(--green);
-      margin-right: 5px;
+      background: currentColor;
       animation: pulse 2s infinite;
+      flex-shrink: 0;
     }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
+
     .card-title {
-      font-size: 1rem;
+      font-size: 15px;
       font-weight: 600;
-      line-height: 1.3;
+      line-height: 1.35;
       margin-bottom: 0.5rem;
       color: var(--offwhite);
     }
+
     .card-desc {
       font-size: 13px;
       color: var(--slate);
-      line-height: 1.6;
+      line-height: 1.65;
       margin-bottom: 1rem;
     }
+
     .impact {
       font-size: 12px;
-      color: var(--offwhite);
-      background: var(--surface2);
+      color: var(--slate2);
+      background: rgba(59,126,255,0.06);
+      border: 1px solid rgba(59,126,255,0.12);
       border-left: 2px solid var(--blue);
-      padding: 6px 10px;
-      border-radius: 0 4px 4px 0;
+      padding: 8px 12px;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
       margin-bottom: 1rem;
-      line-height: 1.5;
+      line-height: 1.55;
     }
-    .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 5px; }
+
     .tag {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      padding: 2px 7px;
-      border-radius: 2px;
+      font-size: 9.5px;
+      padding: 3px 8px;
+      border-radius: 3px;
       background: var(--tag-bg);
       color: var(--slate);
-      border: 1px solid var(--border);
+      border: 1px solid var(--border2);
+      letter-spacing: 0.03em;
+      transition: color 0.15s, border-color 0.15s;
     }
 
-    /* PHILOSOPHY */
+    .card:hover .tag {
+      border-color: rgba(59,126,255,0.15);
+    }
+
+    /* ─── PHILOSOPHY ─── */
     .philosophy-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1px;
-      background: var(--border);
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
     }
+
     .principle {
-      background: var(--navy);
-      padding: 1.25rem;
-      transition: background 0.15s;
+      background: rgba(8,13,26,0.7);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      transition: border-color 0.25s, transform 0.25s;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      position: relative;
+      overflow: hidden;
     }
-    .principle:hover { background: var(--surface); }
+
+    .principle::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0%; height: 2px;
+      background: linear-gradient(90deg, var(--blue), var(--green));
+      transition: width 0.4s ease;
+    }
+
+    .principle:hover {
+      border-color: rgba(59,126,255,0.25);
+      transform: translateY(-2px);
+    }
+
+    .principle:hover::after { width: 100%; }
+
     .principle-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: var(--blue);
+      margin-bottom: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .principle-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--offwhite);
+    }
+
+    .principle-desc {
+      font-size: 13px;
+      color: var(--slate);
+      line-height: 1.65;
+    }
+
+    /* ─── ABOUT / FOOTER ─── */
+    .about {
+      position: relative;
+      z-index: 1;
+      padding: 3rem 2rem 4rem;
+      max-width: 960px;
+      margin: 0 auto;
+      border-top: 1px solid var(--border2);
+    }
+
+    .about-inner {
+      display: flex;
+      gap: 3rem;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .about-avatar {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue) 0%, #00e5a0 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 4px rgba(59,126,255,0.15), 0 0 30px rgba(59,126,255,0.2);
+    }
+
+    .about-text { flex: 1; min-width: 240px; }
+
+    .about-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .about-role {
       font-family: 'JetBrains Mono', monospace;
       font-size: 10px;
       color: var(--blue);
-      margin-bottom: 8px;
-      letter-spacing: 0.08em;
-    }
-    .principle-title {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: var(--offwhite);
-    }
-    .principle-desc {
-      font-size: 12px;
-      color: var(--slate);
-      line-height: 1.6;
+      margin-bottom: 1rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
     }
 
-    /* ABOUT */
-    .about {
-      padding: 2rem;
-      border-top: 1px solid var(--border);
-      max-width: 900px;
-      margin: 0 auto;
-    }
-    .about-name { font-size: 1.1rem; font-weight: 600; margin-bottom: 4px; }
-    .about-role {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--blue);
-      margin-bottom: 1rem;
-      letter-spacing: 0.06em;
-    }
     .about-bio {
-      font-size: 13px;
+      font-size: 13.5px;
       color: var(--slate);
-      line-height: 1.7;
-      margin-bottom: 1.25rem;
-      max-width: 560px;
+      line-height: 1.75;
+      margin-bottom: 1.5rem;
+      max-width: 540px;
     }
-    .links { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .links { display: flex; gap: 10px; flex-wrap: wrap; }
+
     .link-btn {
       font-size: 12px;
       font-family: 'JetBrains Mono', monospace;
-      padding: 6px 14px;
-      border: 1px solid var(--border);
-      border-radius: 3px;
+      padding: 8px 18px;
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-sm);
       color: var(--slate);
-      text-decoration: none;
-      transition: border-color 0.15s, color 0.15s;
+      transition: border-color 0.2s, color 0.2s, background 0.2s, transform 0.15s;
       cursor: pointer;
       background: transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.04em;
     }
-    .link-btn:hover { border-color: var(--blue); color: var(--blue); }
-    .link-btn.primary { border-color: var(--blue); color: var(--blue); }
 
-    /* RESPONSIVE */
-    @media (max-width: 600px) {
-      .hero { padding: 2.5rem 1.25rem 2rem; }
-      .section { padding: 1.5rem 1.25rem; }
-      .about { padding: 1.5rem 1.25rem; }
-      .stat-bar { gap: 1.25rem; }
+    .link-btn:hover {
+      border-color: rgba(59,126,255,0.4);
+      color: var(--offwhite);
+      background: var(--blue-dim);
+      transform: translateY(-1px);
+    }
+
+    .link-btn.primary {
+      border-color: rgba(59,126,255,0.5);
+      color: #7aadff;
+      background: var(--blue-dim);
+    }
+
+    .link-btn.primary:hover {
+      border-color: var(--blue);
+      background: rgba(59,126,255,0.15);
+      color: var(--offwhite);
+    }
+
+    /* ─── FOOTER COPY ─── */
+    .footer-copy {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: rgba(122,134,160,0.4);
+      letter-spacing: 0.08em;
+      border-top: 1px solid var(--border2);
+    }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 640px) {
+      nav { padding: 0.85rem 1.25rem; }
+      .nav-links { display: none; }
+      .hero { padding: 7rem 1.25rem 3.5rem; }
+      .section { padding: 2rem 1.25rem; }
+      .about { padding: 2rem 1.25rem 3rem; }
+      .stat { padding: 0.9rem 1.2rem; }
+      .stat-num { font-size: 1.4rem; }
+      .stat-bar { width: 100%; }
+      h1 { letter-spacing: -0.025em; }
+      .about-inner { gap: 1.5rem; }
     }
   </style>
 </head>
 <body>
 
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">EB ·</div>
+    <ul class="nav-links">
+      <li><a href="#live">Live</a></li>
+      <li><a href="#progress">In Progress</a></li>
+      <li><a href="#philosophy">Philosophy</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
   <div class="hero">
-    <div class="hero-eyebrow">Senior AI Strategist · São Paulo, Brazil</div>
-    <h1>Building AI that<br><span>ships, not slides.</span></h1>
+    <div class="hero-eyebrow">
+      <span class="eyebrow-dot"></span>
+      Senior AI Strategist · São Paulo, Brazil
+    </div>
+    <h1>Building AI that<br><span class="hero-highlight">ships, not slides.</span></h1>
     <p class="hero-sub">End-to-end AI initiatives across automation, agent orchestration, and governance — from prompt engineering to enterprise-scale deployment.</p>
+    <div class="hero-cta">
+      <a class="btn-primary" href="#live">View Live Projects →</a>
+      <a class="btn-ghost" href="mailto:contato@estefanobento.com">Get in touch</a>
+    </div>
     <div class="stat-bar">
-      <div class="stat"><span class="stat-num">10+</span><span class="stat-label">Shipped initiatives</span></div>
-      <div class="stat"><span class="stat-num">150+</span><span class="stat-label">People impacted</span></div>
-      <div class="stat"><span class="stat-num">3</span><span class="stat-label">Agent platforms</span></div>
-      <div class="stat"><span class="stat-num">1</span><span class="stat-label">Philosophy: AI+</span></div>
+      <div class="stat">
+        <span class="stat-num">10+</span>
+        <span class="stat-label">Shipped initiatives</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">150+</span>
+        <span class="stat-label">People impacted</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">3</span>
+        <span class="stat-label">Agent platforms</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">AI+</span>
+        <span class="stat-label">Philosophy</span>
+      </div>
     </div>
   </div>
 
-  <div class="section">
-    <div class="section-header">
-      <span class="section-label">Live & Shipped</span>
+  <div class="divider"></div>
+
+  <!-- LIVE & SHIPPED -->
+  <div id="live" class="section">
+    <div class="section-header reveal">
+      <span class="section-label">Live &amp; Shipped</span>
       <div class="section-line"></div>
+      <span class="section-count">04 / 10</span>
     </div>
     <div class="grid">
 
-      <div class="card">
+      <div class="card reveal">
         <div class="card-header">
-          <div style="font-size:22px">⚖️</div>
+          <div class="card-icon">⚖️</div>
           <span class="status status-live"><span class="live-dot"></span>LIVE · Wave 2</span>
         </div>
         <div class="card-title">Legal Review Automation Pipeline</div>
@@ -311,13 +731,13 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card reveal">
         <div class="card-header">
-          <div style="font-size:22px">🧭</div>
+          <div class="card-icon">🧭</div>
           <span class="status status-live"><span class="live-dot"></span>LIVE</span>
         </div>
         <div class="card-title">AI Intake Advisor</div>
-        <div class="card-desc">Conversational agent that helps teams think through AI ideas before they become projects. Through a structured dialogue, it defines the problem, assesses feasibility, flags governance risks, and outputs a ready-to-use intake brief.</div>
+        <div class="card-desc">Conversational agent that helps teams think through AI ideas before they become projects. Defines the problem, assesses feasibility, flags governance risks, and outputs a ready-to-use intake brief.</div>
         <div class="impact">🎯 Turns a vague AI idea into a structured, governance-ready proposal — in a single conversation.</div>
         <div class="tags">
           <span class="tag">Conversational AI</span>
@@ -327,9 +747,9 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card reveal">
         <div class="card-header">
-          <div style="font-size:22px">🤖</div>
+          <div class="card-icon">🤖</div>
           <span class="status status-live"><span class="live-dot"></span>LIVE · Teams</span>
         </div>
         <div class="card-title">Meetings Intelligence Agent</div>
@@ -343,9 +763,9 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card reveal">
         <div class="card-header">
-          <div style="font-size:22px">📋</div>
+          <div class="card-icon">📋</div>
           <span class="status status-live"><span class="live-dot"></span>LIVE</span>
         </div>
         <div class="card-title">Compliance Tracker Automation</div>
@@ -362,17 +782,21 @@
     </div>
   </div>
 
-  <div class="section" style="padding-top:0">
-    <div class="section-header">
+  <div class="divider"></div>
+
+  <!-- IN PROGRESS -->
+  <div id="progress" class="section">
+    <div class="section-header reveal">
       <span class="section-label">In Progress</span>
       <div class="section-line"></div>
+      <span class="section-count">06 / 10</span>
     </div>
     <div class="grid">
 
-      <div class="card">
+      <div class="card reveal">
         <div class="card-header">
-          <div style="font-size:22px">💬</div>
-          <span class="status status-build">◎ BUILDING</span>
+          <div class="card-icon">💬</div>
+          <span class="status status-build"><span class="live-dot"></span>BUILDING</span>
         </div>
         <div class="card-title">Executive Communications Concierge</div>
         <div class="card-desc">AI agent acting as a senior communications partner for executive and leadership teams. Drafts messages, builds briefing docs, and pressure-tests content — always adapted to the right leader voice, audience, and channel.</div>
@@ -385,10 +809,10 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card reveal">
         <div class="card-header">
-          <div style="font-size:22px">✈️</div>
-          <span class="status status-build">◎ BUILDING</span>
+          <div class="card-icon">✈️</div>
+          <span class="status status-build"><span class="live-dot"></span>BUILDING</span>
         </div>
         <div class="card-title">Enterprise Travel Request Advisor</div>
         <div class="card-desc">Conversational AI agent guiding employees through travel request workflows. Replaces an unstructured, email-heavy process with a consistent, policy-aligned experience.</div>
@@ -400,10 +824,10 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card reveal">
         <div class="card-header">
-          <div style="font-size:22px">🗂️</div>
-          <span class="status status-pilot">◉ PILOTING</span>
+          <div class="card-icon">🗂️</div>
+          <span class="status status-pilot"><span class="live-dot"></span>PILOTING</span>
         </div>
         <div class="card-title">AI Agent Governance Framework</div>
         <div class="card-desc">Governance infrastructure for an enterprise agent portfolio — classification tool, 18-question Go-Live Guardrails Checklist, and a structured Agent Registry replacing ad hoc tracking.</div>
@@ -416,10 +840,10 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card reveal">
         <div class="card-header">
-          <div style="font-size:22px">📝</div>
-          <span class="status status-pilot">◉ PILOTING</span>
+          <div class="card-icon">📝</div>
+          <span class="status status-pilot"><span class="live-dot"></span>PILOTING</span>
         </div>
         <div class="card-title">Structured Planning Agent</div>
         <div class="card-desc">LLM agent with a 7-step system prompt for generating structured planning documents. Outputs copy-paste-ready content blocks aligned to enterprise planning templates.</div>
@@ -432,10 +856,10 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card reveal">
         <div class="card-header">
-          <div style="font-size:22px">🏆</div>
-          <span class="status status-build">◎ RUNNING</span>
+          <div class="card-icon">🏆</div>
+          <span class="status status-build"><span class="live-dot"></span>RUNNING</span>
         </div>
         <div class="card-title">AI Adoption League</div>
         <div class="card-desc">Gamified AI adoption program for a 150+ person org. Structured challenge tracks, leaderboard mechanics, and a prize pool designed to build grassroots AI fluency at scale.</div>
@@ -448,10 +872,10 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card reveal">
         <div class="card-header">
-          <div style="font-size:22px">🔄</div>
-          <span class="status status-build">◎ BUILDING</span>
+          <div class="card-icon">🔄</div>
+          <span class="status status-build"><span class="live-dot"></span>BUILDING</span>
         </div>
         <div class="card-title">Cross-System Data Sync Automation</div>
         <div class="card-desc">Email-triggered flow syncing employee data across two enterprise platforms. Eliminates a recurring manual reconciliation task with zero API coding required.</div>
@@ -466,40 +890,102 @@
     </div>
   </div>
 
-  <div class="section" style="padding-top:0">
-    <div class="section-header">
+  <div class="divider"></div>
+
+  <!-- PHILOSOPHY -->
+  <div id="philosophy" class="section">
+    <div class="section-header reveal">
       <span class="section-label">Philosophy</span>
       <div class="section-line"></div>
     </div>
     <div class="philosophy-grid">
-      <div class="principle">
-        <div class="principle-num">PRINCIPLE 01</div>
+      <div class="principle reveal">
+        <div class="principle-num">Principle 01</div>
         <div class="principle-title">AI+, not +AI</div>
         <div class="principle-desc">Redesign the process around AI. Don't bolt automation onto broken steps.</div>
       </div>
-      <div class="principle">
-        <div class="principle-num">PRINCIPLE 02</div>
+      <div class="principle reveal">
+        <div class="principle-num">Principle 02</div>
         <div class="principle-title">Checklists before tooling</div>
         <div class="principle-desc">Validate the logic and edge cases first. Then automate what's proven to work.</div>
       </div>
-      <div class="principle">
-        <div class="principle-num">PRINCIPLE 03</div>
+      <div class="principle reveal">
+        <div class="principle-num">Principle 03</div>
         <div class="principle-title">Ship, then iterate</div>
         <div class="principle-desc">Real impact comes from deployed agents, not from decks about deploying agents.</div>
       </div>
     </div>
   </div>
 
-  <div class="about">
-    <div class="about-name">Estéfano Bento</div>
-    <div class="about-role">SENIOR AI STRATEGIST · SÃO PAULO, BRAZIL</div>
-    <div class="about-bio">I design and ship AI initiatives across automation, agent orchestration, and enterprise governance. My work spans LLM pipelines, conversational agents, and the operational frameworks that make AI sustainable at scale. Background in finance, operations, and procurement before moving fully into AI strategy and delivery.</div>
-    <div class="links">
-      <a class="link-btn primary" href="https://linkedin.com" target="_blank">LinkedIn →</a>
-      <a class="link-btn" href="https://github.com" target="_blank">GitHub</a>
-      <a class="link-btn" href="mailto:contato@estefanobento.com">Contact</a>
+  <div class="divider"></div>
+
+  <!-- ABOUT -->
+  <div id="about" class="about">
+    <div class="about-inner reveal">
+      <div class="about-avatar">EB</div>
+      <div class="about-text">
+        <div class="about-name">Estéfano Bento</div>
+        <div class="about-role">Senior AI Strategist · São Paulo, Brazil</div>
+        <div class="about-bio">I design and ship AI initiatives across automation, agent orchestration, and enterprise governance. My work spans LLM pipelines, conversational agents, and the operational frameworks that make AI sustainable at scale. Background in finance, operations, and procurement before moving fully into AI strategy and delivery.</div>
+        <div class="links">
+          <a class="link-btn primary" href="https://linkedin.com" target="_blank">LinkedIn ↗</a>
+          <a class="link-btn" href="https://github.com" target="_blank">GitHub ↗</a>
+          <a class="link-btn" href="mailto:contato@estefanobento.com">contato@estefanobento.com</a>
+        </div>
+      </div>
     </div>
   </div>
+
+  <div class="footer-copy">
+    © 2025 Estéfano Bento · Built with intent.
+  </div>
+
+  <script>
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 60);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Animated counters
+    function animateCounter(el, target, suffix = '') {
+      const isNum = !isNaN(parseInt(target));
+      if (!isNum) return;
+      const num = parseInt(target);
+      let start = 0;
+      const duration = 1200;
+      const step = (timestamp) => {
+        if (!start) start = timestamp;
+        const progress = Math.min((timestamp - start) / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.floor(ease * num) + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+        else el.textContent = target + suffix;
+      };
+      requestAnimationFrame(step);
+    }
+
+    const statNums = document.querySelectorAll('.stat-num');
+    const counterObs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const raw = el.textContent.trim();
+          if (raw.endsWith('+')) animateCounter(el, parseInt(raw), '+');
+          else if (!isNaN(parseInt(raw))) animateCounter(el, parseInt(raw), '');
+          counterObs.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    statNums.forEach(el => counterObs.observe(el));
+  </script>
 
 </body>
 </html>
